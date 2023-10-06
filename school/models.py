@@ -20,7 +20,7 @@ class Course(models.Model):
     @classmethod
     def truncate_table_restart_id(cls):
         with connection.cursor() as cursor:
-            cursor.execute(f'TRUNCATE TABLE {cls._meta.db_table} RESTART IDENTITY')
+            cursor.execute(f'TRUNCATE TABLE {cls._meta.db_table} CASCADE')
 
 
 class Lesson(models.Model):
@@ -40,7 +40,7 @@ class Lesson(models.Model):
     @classmethod
     def truncate_table_restart_id(cls):
         with connection.cursor() as cursor:
-            cursor.execute(f'TRUNCATE TABLE {cls._meta.db_table} RESTART IDENTITY')
+            cursor.execute(f'TRUNCATE TABLE {cls._meta.db_table} CASCADE;')
 
 
 class Payment(models.Model):
@@ -66,7 +66,8 @@ class Payment(models.Model):
     @classmethod
     def truncate_table_restart_id(cls):
         with connection.cursor() as cursor:
-            cursor.execute(f'TRUNCATE TABLE {cls._meta.db_table} RESTART IDENTITY')
+            cursor.execute(f'TRUNCATE TABLE {cls._meta.db_table} CASCADE;'
+                           f'TRUNCATE TABLE {cls._meta.db_table} RESTART IDENTITY')
 
 
 
