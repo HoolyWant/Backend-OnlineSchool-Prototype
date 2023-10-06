@@ -1,4 +1,7 @@
-from django.db import models
+from django.db import models, connection
+
+from users.models import User
+
 NULLABLE = {'blank': True, 'null': True}
 
 
@@ -13,6 +16,11 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+
+    @classmethod
+    def truncate_table_restart_id(cls):
+        with connection.cursor() as cursor:
+            cursor.execute(f'TRUNCATE TABLE {cls._meta.db_table} RESTART IDENTITY')
 
 
 class Lesson(models.Model):
@@ -29,6 +37,36 @@ class Lesson(models.Model):
     def __str__(self):
         return self.title
 
+    @classmethod
+    def truncate_table_restart_id(cls):
+        with connection.cursor() as cursor:
+            cursor.execute(f'TRUNCATE TABLE {cls._meta.db_table} RESTART IDENTITY')
+
+
+class Payment(models.Model):
+    CASH = 'cash'
+    CARD = 'card'
+    PAYMENT_METHODS = ((CASH, 'наличные'),
+                       (CARD, 'карта'))
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
+    payment_date = models.DateTimeField(auto_now_add=True, verbose_name='дата оплаты')
+    course = models.ForeignKey(Course,  on_delete=models.CASCADE, verbose_name='курс', **NULLABLE)
+    lesson = models.ForeignKey(Lesson,  on_delete=models.CASCADE, verbose_name='урок', **NULLABLE)
+    amount = models.PositiveIntegerField(verbose_name='сумма оплаты')
+    payment_method = models.CharField(max_length=10, choices=PAYMENT_METHODS, verbose_name='способ оплаты')
+
+    class Meta:
+        verbose_name = 'оплата'
+        verbose_name_plural = 'оплаты'
+
+    def __str__(self):
+        return self.amount
+
+    @classmethod
+    def truncate_table_restart_id(cls):
+        with connection.cursor() as cursor:
+            cursor.execute(f'TRUNCATE TABLE {cls._meta.db_table} RESTART IDENTITY')
 
 
 
