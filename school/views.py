@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, generics
 
-from school.models import Course
+from school.models import Course, Lesson
 from school.serializers import CourseSerializer, LessonSerializer
 
 
@@ -10,14 +10,14 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
 
 
-class LessonAPIList(generics.ListAPIView):
+class LessonAPIList(generics.ListCreateAPIView):
     serializer_class = LessonSerializer
-    queryset = Course.objects.all()
+    queryset = Lesson.objects.all()
 
 
 class LessonAPIView(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
-    queryset = Course.objects.all()
+    queryset = Lesson.objects.all()
 
 
 class LessonAPICreate(generics.CreateAPIView):
@@ -26,10 +26,10 @@ class LessonAPICreate(generics.CreateAPIView):
 
 class LessonAPIEdit(generics.UpdateAPIView):
     serializer_class = LessonSerializer
-    queryset = Course.objects.all()
+    queryset = Lesson.objects.all()
 
 
 class LessonAPIDelete(generics.DestroyAPIView):
     serializer_class = LessonSerializer
-    queryset = Course.objects.all()
+    queryset = Lesson.objects.all()
 
