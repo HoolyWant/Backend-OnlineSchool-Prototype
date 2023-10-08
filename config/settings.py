@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'school',
     'users',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
