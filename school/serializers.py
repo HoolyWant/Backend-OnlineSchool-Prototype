@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from school.models import Course, Lesson, Payment
+from school.permissions import IsOwner
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -26,4 +27,5 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = ['user', 'payment_date', 'course', 'lesson', 'amount', 'payment_method']
+        permission_classes = [IsOwner]
 

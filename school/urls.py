@@ -5,6 +5,7 @@ from school.views import CourseViewSet, LessonAPIList, LessonAPICreate, LessonAP
 from rest_framework.routers import DefaultRouter
 
 app_name = SchoolConfig.name
+
 router = DefaultRouter()
 router.register(r'course', CourseViewSet, basename='course')
 
