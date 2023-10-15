@@ -4,9 +4,9 @@ from rest_framework import viewsets, generics, mixins
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 
-from school.models import Course, Lesson, Payment
+from school.models import Course, Lesson, Payment, Following
 from school.permissions import IsStaff, IsOwner, ViewSetPermission
-from school.serializers import CourseSerializer, LessonSerializer, PaymentSerializer
+from school.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, FollowingSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -53,4 +53,20 @@ class PaymentAPIList(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['course', 'lesson', 'payment_method']
     ordering_fields = ['payment_date']
+    permission_classes = [IsOwner]
+
+
+class FollowingCreateApi(generics.CreateAPIView):
+    serializer_class = FollowingSerializer
+
+    def perform_create(self, serializer):
+        new_following = serializer.save()
+        if new_following.following_status:
+            new_following.user = self.request.user
+            new_following.save()
+
+
+class FollowingDestroyApi(generics.DestroyAPIView):
+    serializer_class = FollowingSerializer
+    queryset = Following.objects.all()
     permission_classes = [IsOwner]

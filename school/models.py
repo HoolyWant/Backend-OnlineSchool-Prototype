@@ -72,4 +72,13 @@ class Payment(models.Model):
                            f'TRUNCATE TABLE {cls._meta.db_table} RESTART IDENTITY')
 
 
+class Following(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
+    following_status = models.BooleanField(default=True, verbose_name='статус подписки')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс', **NULLABLE)
+    class Meta:
+        verbose_name = 'подписка'
+        verbose_name_plural = 'подписки'
 
+    def __str__(self):
+        return f'{self.user}, {self.course}, {self.following_status}'
