@@ -12,7 +12,7 @@ from school.serializers import CourseSerializer, LessonSerializer, PaymentSerial
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
-    permission_classes = (ViewSetPermission, )
+    # permission_classes = (ViewSetPermission, )
 
 
 class LessonAPIList(generics.ListCreateAPIView):
@@ -23,7 +23,7 @@ class LessonAPIList(generics.ListCreateAPIView):
 class LessonAPIView(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsStaff | IsOwner]
+    # permission_classes = [IsStaff | IsOwner]
 
 
 class LessonAPICreate(generics.CreateAPIView):
@@ -38,13 +38,13 @@ class LessonAPICreate(generics.CreateAPIView):
 class LessonAPIEdit(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsStaff | IsOwner]
+    # permission_classes = [IsStaff | IsOwner]
 
 
 class LessonAPIDelete(generics.DestroyAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsOwner]
+    # permission_classes = [IsOwner]
 
 
 class PaymentAPIList(generics.ListAPIView):
@@ -53,7 +53,7 @@ class PaymentAPIList(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['course', 'lesson', 'payment_method']
     ordering_fields = ['payment_date']
-    permission_classes = [IsOwner]
+    # permission_classes = [IsOwner]
 
 
 class FollowingCreateApi(generics.CreateAPIView):
@@ -66,7 +66,8 @@ class FollowingCreateApi(generics.CreateAPIView):
             new_following.save()
 
 
+
 class FollowingDestroyApi(generics.DestroyAPIView):
     serializer_class = FollowingSerializer
     queryset = Following.objects.all()
-    permission_classes = [IsOwner]
+    # permission_classes = [IsOwner]

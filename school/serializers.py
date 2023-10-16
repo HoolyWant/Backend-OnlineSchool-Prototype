@@ -9,7 +9,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ['title', 'description', 'image', 'link']
+        fields = ['id', 'title', 'description', 'image', 'link']
         validators = [
             EvenNumberValidator(field='link')
         ]
