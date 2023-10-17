@@ -16,6 +16,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 class UserRetrieveApi(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    # permission_classes = [IsStaff | IsAdminUser]
+    permission_classes = [IsStaff | IsAdminUser]
 
 
