@@ -29,7 +29,7 @@ class LessonAPIView(generics.RetrieveAPIView):
 
 class LessonAPICreate(generics.CreateAPIView):
     serializer_class = LessonSerializer
-    permission_classes = [NotIsStaff | IsAdminUser]
+    permission_classes = [NotIsStaff | IsAdminUser | IsAuthenticated]
 
     def perform_create(self, serializer):
         new_lesson = serializer.save()
