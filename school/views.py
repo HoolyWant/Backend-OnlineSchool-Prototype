@@ -46,7 +46,7 @@ class LessonAPIEdit(generics.UpdateAPIView):
 class LessonAPIDelete(generics.DestroyAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsOwner | IsAdminUser]
+    permission_classes = [IsAdminUser]
 
 
 class PaymentAPIList(generics.ListAPIView):

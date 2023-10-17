@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.reverse import reverse_lazy
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIRequestFactory
 
 from school.models import Lesson
 from users.models import User
@@ -26,25 +26,23 @@ class LessonApiTestCAse(APITestCase):
             "link": "https://www.youtube.com/"
         }
 
+        self.model = Lesson.objects.create(title='test3', description='test3', link="https://www.youtube.com/")
+
     def test_get(self):
         response = self.client.get(reverse('school:lesson_list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_post(self):
         response = self.client.post(reverse('school:lesson_create'), data=self.data)
-        # request = self.client.get('/lesson/1')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        # self.assertEqual(request, self.data)
 
     def test_patch(self):
-        response = self.client.patch('/lesson/edit/1', self.patch_data)
-        request = self.client.get('/lesson/1')
-        # self.assertEqual(request.json(), self.patch_data)
+        response = self.client.patch(f'/lesson/edit/{self.model.id}', data=self.patch_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete(self):
-        response = self.client.delete('/lesson_delete/1')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.delete(f'/lesson/delete/{self.model.id}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
 
 
