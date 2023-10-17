@@ -16,3 +16,5 @@ class UserRetrieveApi(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = [IsStaff]
+
+
