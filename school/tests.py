@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse_lazy
 from rest_framework.test import APITestCase, APIRequestFactory
 
-from school.models import Lesson
+from school.models import Lesson, Course
 from users.models import User
 
 
@@ -43,6 +43,20 @@ class LessonApiTestCAse(APITestCase):
     def test_delete(self):
         response = self.client.delete(f'/lesson/delete/{self.model.id}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+class FollowingApiTestCAse(APITestCase):
+    def setUp(self) -> None:
+        self.user = User.objects.create(username='admin_test', password='test', is_staff=True, is_superuser=True)
+        self.client.force_authenticate(user=self.user)
+        self.model = Course.objects.create(title='title', description='description')
+        self.data = {
+            "course": self.model.id
+        }
+
+    def test_post(self):
+        response = self.client.post(reverse('school:following'), data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
 

@@ -72,4 +72,4 @@ class FollowingCreateApi(generics.CreateAPIView):
 class FollowingDestroyApi(generics.DestroyAPIView):
     serializer_class = FollowingSerializer
     queryset = Following.objects.all()
-    permission_classes = [IsOwner]
+    permission_classes = [IsOwner | IsAdminUser]
