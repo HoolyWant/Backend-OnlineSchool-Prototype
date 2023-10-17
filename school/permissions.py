@@ -6,8 +6,11 @@ class ViewSetPermission(BasePermission):
         if request.user.is_authenticated:
             if view.action == 'list':
                 return True
-            elif view.action == 'create' and not request.is_staff:
-                return True
+            elif view.action == 'create':
+                if request.is_staff:
+                    return False
+                else:
+                    return True
             elif view.action == 'delete':
                 return request.user == view.get_object().user
             elif view.action in ['retrieve', 'update', 'partial_update', ] and request.user == view.get_object(
@@ -27,5 +30,16 @@ class IsOwner(BasePermission):
 class IsStaff(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_staff
+
+
+class NotIsStaff(BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            if request.user.is_staff is False:
+                return True
+            else:
+                return False
+        else:
+            return False
 
 
