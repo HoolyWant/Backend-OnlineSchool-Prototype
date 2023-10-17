@@ -5,7 +5,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 
 from school.models import Course, Lesson, Payment, Following
-from school.permissions import IsStaff, IsOwner, ViewSetPermission
+from school.permissions import IsStaff, IsOwner, ViewSetPermission, NotIsStaff
 from school.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, FollowingSerializer
 
 
@@ -18,6 +18,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 class LessonAPIList(generics.ListCreateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
+    permission_classes = [IsAuthenticated]
 
 
 class LessonAPIView(generics.RetrieveAPIView):
@@ -28,6 +29,7 @@ class LessonAPIView(generics.RetrieveAPIView):
 
 class LessonAPICreate(generics.CreateAPIView):
     serializer_class = LessonSerializer
+    permission_classes = [NotIsStaff]
 
     def perform_create(self, serializer):
         new_lesson = serializer.save()
@@ -64,7 +66,6 @@ class FollowingCreateApi(generics.CreateAPIView):
         if new_following.following_status:
             new_following.user = self.request.user
             new_following.save()
-
 
 
 class FollowingDestroyApi(generics.DestroyAPIView):
