@@ -7,7 +7,7 @@ class ViewSetPermission(BasePermission):
             if view.action == 'list':
                 return True
             elif view.action == 'create':
-                if request.is_staff:
+                if request.user.is_staff:
                     return False
                 else:
                     return True
