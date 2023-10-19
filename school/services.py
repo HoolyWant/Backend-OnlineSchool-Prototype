@@ -36,26 +36,40 @@ def create_price(product: dict, amount: int) -> dict:
 
 
 def create_session(price):
-    stripe.checkout.Session.create(
+    session = stripe.checkout.Session.create(
         success_url="https://example.com/success",
         line_items=[
             {
                 "price": price['id'],
-                "quantity": 2,
+                "quantity": 1,
             },
         ],
-        mode="payment",
+        mode="subscription",
     )
+    return session
+
+def create_paymentmethod(card):
+    payment_method = stripe.PaymentMethod.create(
+        type="card",
+        card={
+            "number": card['number'],
+            "exp_month": card['exp_month'],
+            "exp_year": card['exp_year'],
+            "cvc": card['cvc'],
+        },
+    )
+    return payment_method
 
 if __name__ == '__main__':
-    stripe.api_key = 'sk_test_51O2c0uFMQDI9oh75w91rNgYPh7SKEUkuNnV1ltENUSwgUVqvvyXNtyMnKNsvbcbYndL6OwhtmF26EfHVHC0xV74L00r8iBB8Q0'
-
-    customer = stripe.Customer.retrieve(
-        'cus_OqV3Ayih4uZvqx',
-        api_key=os.getenv('STRIPE_API_KEY')
-    )
-    customer.capture()
-    product = create_product('F')
+    stripe.api_key = "sk_test_51O2c0uFMQDI9oh75w91rNgYPh7SKEUkuNnV1ltENUSwgUVqvvyXNtyMnKNsvbcbYndL6OwhtmF26EfHVHC0xV74L00r8iBB8Q0" #os.getenv('STRIPE_API_KEY')
+    product = create_product('Лёха-plus')
     price = create_price(product, 200)
     session = create_session(price)
-    pprint(session)
+    pprint(session['url'])
+    card = {
+        'number': '424242424242',
+        'exp_month': 12,
+        'exp_year': 2030,
+        'cvc': '122'
+    }
+    payment_method = create_paymentmethod(card)
