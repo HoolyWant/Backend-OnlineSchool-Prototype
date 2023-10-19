@@ -1,4 +1,5 @@
 import json
+from pprint import pprint
 
 from django.test import TestCase
 
@@ -8,6 +9,7 @@ from rest_framework.reverse import reverse_lazy
 from rest_framework.test import APITestCase, APIRequestFactory
 
 from school.models import Lesson, Course
+from school.services import create_paymentintent, retrieve_paymentintent
 from users.models import User
 
 
@@ -43,6 +45,9 @@ class LessonApiTestCAse(APITestCase):
     def test_delete(self):
         response = self.client.delete(f'/lesson/delete/{self.model.id}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        # pprint(create_paymentintent(100000))
+        pprint(retrieve_paymentintent('pi_3O2nQ2FMQDI9oh751wLIiBp5'))
+
 
 
 class FollowingApiTestCAse(APITestCase):
@@ -57,6 +62,4 @@ class FollowingApiTestCAse(APITestCase):
     def test_post(self):
         response = self.client.post(reverse('school:following'), data=self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-
 
