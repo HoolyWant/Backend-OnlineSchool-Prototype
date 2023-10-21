@@ -58,24 +58,40 @@ class PaymentCreateAPI(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         new_payment = serializer.save()
-        if new_payment.course is not None:
-            new_payment.amount = Course.objects.get(pk=new_payment.course).cost
+        new_payment.user = self.request.user
+        if new_payment.course is not None and new_payment.lesson is None:
+            new_payment.amount = Course.objects.get(pk=new_payment.course.__dict__['id']).cost
             if new_payment.payment_method == 'card':
                 stripe.api_key = os.getenv('STRIPE_API_KEY')
-                product_name = Course.objects.get(pk=new_payment.course).title
+                product_name = Course.objects.get(pk=new_payment.course.__dict__['id']).title
                 new_product = create_product(product_name)
                 new_price = create_price(new_product, new_payment.amount)
                 new_session = create_session(new_price)
                 new_payment.link = new_session['url']
+                new_payment.save()
+        elif new_payment.lesson is not '' and new_payment.course is '':
+            new_payment.amount = Lesson.objects.get(pk=new_payment.lesson.__dict__['id']).cost
+            if new_payment.payment_method == 'card':
+                stripe.api_key = os.getenv('STRIPE_API_KEY')
+                product_name = Lesson.objects.get(pk=new_payment.lesson.__dict__['id']).title
+                new_product = create_product(product_name)
+                new_price = create_price(new_product, new_payment.amount)
+                new_session = create_session(new_price)
+                new_payment.link = new_session['url']
+                new_payment.save()
+        elif new_payment.lesson is not None and new_payment.course is not None:
+            raise 'Нужно выбрать либо урок, либо курс для оплаты'
+        else:
+            raise 'Ни один из курсов или уроков не выбраны'
 
 
-class PaymentAPIList(generics.ListAPIView):
-    queryset = Payment.objects.all()
+class PaymentAPIList(generics.ListCreateAPIView):
     serializer_class = PaymentSerializer
+    queryset = Payment.objects.all()
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['course', 'lesson', 'payment_method']
     ordering_fields = ['payment_date']
-    permission_classes = [IsOwner | IsAdminUser]
+    permission_classes = [IsAdminUser]
 
 
 class PaymentAPIVIew(generics.RetrieveAPIView):

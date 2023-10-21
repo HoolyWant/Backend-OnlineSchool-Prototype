@@ -1,15 +1,11 @@
 import json
 from pprint import pprint
 
-from django.test import TestCase
-
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.reverse import reverse_lazy
-from rest_framework.test import APITestCase, APIRequestFactory
+from rest_framework.test import APITestCase
 
 from school.models import Lesson, Course
-from school.services import create_paymentintent, retrieve_paymentintent
 from users.models import User
 
 
@@ -45,9 +41,6 @@ class LessonApiTestCAse(APITestCase):
     def test_delete(self):
         response = self.client.delete(f'/lesson/delete/{self.model.id}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        # pprint(create_paymentintent(100000))
-        pprint(retrieve_paymentintent('pi_3O2nQ2FMQDI9oh751wLIiBp5'))
-
 
 
 class FollowingApiTestCAse(APITestCase):
@@ -60,6 +53,47 @@ class FollowingApiTestCAse(APITestCase):
         }
 
     def test_post(self):
-        response = self.client.post(reverse('school:following'), data=self.data)
+        response = self.client.post(reverse('school:following_create'), data=self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+class PaymentApiTestCase(APITestCase):
+    def setUp(self) -> None:
+        self.user = User.objects.create(username='admin_test', password='test', is_staff=True, is_superuser=True)
+        self.client.force_authenticate(user=self.user)
+        self.model = Course.objects.create(title='test3', description='test3', cost=1000)
+        self.pay = {
+            'course': self.model.id,
+            'payment_method': 'card'
+        }
+
+    def test_get(self):
+        response = self.client.get('/payment/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_post(self):
+        response = self.client.post(reverse('school:payment_create'), data=self.pay)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

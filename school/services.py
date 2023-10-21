@@ -60,6 +60,8 @@ def create_paymentmethod(card):
     )
     return payment_method
 
+
+
 if __name__ == '__main__':
     stripe.api_key = "sk_test_51O2c0uFMQDI9oh75w91rNgYPh7SKEUkuNnV1ltENUSwgUVqvvyXNtyMnKNsvbcbYndL6OwhtmF26EfHVHC0xV74L00r8iBB8Q0" #os.getenv('STRIPE_API_KEY')
     product = create_product('Лёха-plus')
