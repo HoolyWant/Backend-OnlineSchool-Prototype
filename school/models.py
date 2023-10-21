@@ -10,6 +10,7 @@ class Course(models.Model):
     image = models.ImageField(verbose_name='превью', **NULLABLE)
     description = models.TextField(verbose_name='описание')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
+    cost = models.IntegerField(default=0, verbose_name='цена')
 
     class Meta:
         verbose_name = 'курс'
@@ -31,6 +32,7 @@ class Lesson(models.Model):
     link = models.CharField(max_length=200, verbose_name='ссылка')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс', **NULLABLE, related_name='lesson')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
+    cost = models.IntegerField(default=0, verbose_name='цена')
 
     class Meta:
         verbose_name = 'урок'
@@ -57,6 +59,7 @@ class Payment(models.Model):
     lesson = models.ForeignKey(Lesson,  on_delete=models.CASCADE, verbose_name='урок', **NULLABLE)
     amount = models.PositiveIntegerField(verbose_name='сумма оплаты')
     payment_method = models.CharField(max_length=10, choices=PAYMENT_METHODS, verbose_name='способ оплаты')
+    link = models.CharField(max_length=200, verbose_name='ссылка', **NULLABLE)
 
     class Meta:
         verbose_name = 'оплата'
