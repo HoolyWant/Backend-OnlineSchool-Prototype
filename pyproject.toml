@@ -21,6 +21,8 @@ coverage = "^7.3.2"
 stripe = "^7.0.0"
 env = "^0.1.0"
 python-dotenv = "^1.0.0"
+celery = "^5.3.4"
+redis = "^5.0.1"
 
 
 [build-system]

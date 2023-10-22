@@ -3,9 +3,10 @@ from pprint import pprint
 import stripe
 import os
 
+from django.core.mail import send_mail
 from dotenv import load_dotenv
 
-from config.settings import BASE_DIR
+from config.settings import BASE_DIR, EMAIL_HOST_USER
 
 dot_env = os.path.join(BASE_DIR, '.env')
 load_dotenv(dotenv_path=dot_env)
@@ -67,6 +68,14 @@ def create_paymentmethod(card):
     )
     return payment_method
 
+
+def send_update(followers_email_list, program):
+    send_mail(
+        f'Hello, student!',
+        f'Your studing program {program["title"]} has been updated!',
+        EMAIL_HOST_USER,
+        followers_email_list,
+    )
 
 
 if __name__ == '__main__':

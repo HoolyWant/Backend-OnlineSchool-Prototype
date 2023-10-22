@@ -9,13 +9,30 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from school.models import Course, Lesson, Payment, Following
 from school.permissions import IsStaff, IsOwner, ViewSetPermission, NotIsStaff
 from school.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, FollowingSerializer
-from school.services import create_product, create_price, create_session
+from school.services import create_product, create_price, create_session, send_update
+from users.models import User
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
     permission_classes = (ViewSetPermission, )
+
+    def perform_create(self, serializer):
+        new_lesson = serializer.save()
+        new_lesson.user = self.request.user
+        new_lesson.save()
+
+    def perform_update(self, serializer):
+        update_course = serializer.save()
+        followers = Following.objects.filter(course_id=update_course.id)
+        followers_list = []
+        course_title = update_course.title
+        for follower in followers:
+            followers_list.append(User.objects.get(
+                                  pk=follower.user_id).__dict__['email'])
+        send_update(followers_list, course_title)
+        update_course.save()
 
 
 class LessonAPIList(generics.ListCreateAPIView):
@@ -44,6 +61,11 @@ class LessonAPIEdit(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsStaff | IsOwner | IsAdminUser]
+
+    def perform_update(self, serializer):
+        update_lesson = serializer.save()
+        if update_lesson.course_id:
+            pass
 
 
 class LessonAPIDelete(generics.DestroyAPIView):

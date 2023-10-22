@@ -36,4 +36,4 @@ class PaymentSerializer(serializers.ModelSerializer):
 class FollowingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Following
-        fields = ['course']
+        fields = ['course',]
