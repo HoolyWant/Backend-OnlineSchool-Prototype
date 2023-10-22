@@ -28,7 +28,7 @@ load_dotenv(dotenv_path=dot_env)
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-nvg5s0(4ac504m7lbj-aa8@%n5a=rm93b#9#^f(*47xva0ha51'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -68,8 +68,8 @@ REST_FRAMEWORK = {
 
 # Настройки срока действия токенов
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
 }
 
 MIDDLEWARE = [
@@ -124,7 +124,7 @@ DATABASES = {
         'NAME': 'DjangoRest',
         'HOST': 'localhost',
         'USER': 'postgres',
-        'PASSWORD': 'qwerty',
+        'PASSWORD': os.getenv('PASSWORD_DB'),
     }
 }
 

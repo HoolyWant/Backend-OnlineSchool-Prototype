@@ -79,6 +79,7 @@ class Following(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
     following_status = models.BooleanField(default=True, verbose_name='статус подписки')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс', **NULLABLE)
+
     class Meta:
         verbose_name = 'подписка'
         verbose_name_plural = 'подписки'

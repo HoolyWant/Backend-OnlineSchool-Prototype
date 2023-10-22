@@ -3,6 +3,13 @@ from pprint import pprint
 import stripe
 import os
 
+from dotenv import load_dotenv
+
+from config.settings import BASE_DIR
+
+dot_env = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path=dot_env)
+
 
 def create_paymentintent(amount):
     paymentinrtent = stripe.PaymentIntent.create(
@@ -63,7 +70,7 @@ def create_paymentmethod(card):
 
 
 if __name__ == '__main__':
-    stripe.api_key = "sk_test_51O2c0uFMQDI9oh75w91rNgYPh7SKEUkuNnV1ltENUSwgUVqvvyXNtyMnKNsvbcbYndL6OwhtmF26EfHVHC0xV74L00r8iBB8Q0" #os.getenv('STRIPE_API_KEY')
+    stripe.api_key = os.getenv('STRIPE_API_KEY')
     product = create_product('Лёха-plus')
     price = create_price(product, 200)
     session = create_session(price)
