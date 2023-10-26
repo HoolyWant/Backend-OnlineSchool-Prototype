@@ -56,6 +56,7 @@ def create_session(price):
     )
     return session
 
+
 def create_paymentmethod(card):
     payment_method = stripe.PaymentMethod.create(
         type="card",
@@ -68,14 +69,6 @@ def create_paymentmethod(card):
     )
     return payment_method
 
-
-def send_update(followers_email_list, program):
-    send_mail(
-        f'Hello, student!',
-        f'Your studing program {program["title"]} has been updated!',
-        EMAIL_HOST_USER,
-        followers_email_list,
-    )
 
 
 if __name__ == '__main__':
