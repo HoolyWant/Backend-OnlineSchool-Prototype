@@ -23,7 +23,16 @@ def check_user_activity() -> None:
     users = User.objects.all()
     for user in users:
         month = user.last_login + relativedelta(months=1)
+        email_list = []
         if user.is_active and datetime.now() >= month:
             user.is_active = False
+            email_list.append(user.email)
+        send_mail(
+            'Dear, student',
+            'Your account now is not active(\nPlease, reply this message'
+            ' to be active again <3',
+            EMAIL_HOST_USER,
+            email_list
+        )
 
 
