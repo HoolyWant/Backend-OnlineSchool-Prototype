@@ -8,10 +8,6 @@ from dotenv import load_dotenv
 
 from config.settings import BASE_DIR, EMAIL_HOST_USER
 
-dot_env = os.path.join(BASE_DIR, '.env')
-load_dotenv(dotenv_path=dot_env)
-
-
 def create_paymentintent(amount):
     paymentinrtent = stripe.PaymentIntent.create(
       amount=amount,

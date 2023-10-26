@@ -15,6 +15,7 @@ from pathlib import Path
 import os
 from pathlib import Path
 
+from celery.utils.time import timezone
 from dotenv import load_dotenv
 
 
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'django_filters',
+    'django_celery_beat',
     'drf_yasg',
     'corsheaders',
 
@@ -71,6 +73,13 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
+}
+
+CELERY_BEAT_SCHEDULE = {
+    'task-name': {
+        'task': 'school.tasks.check_user_activity',  # Путь к задаче
+        'schedule': timedelta(minutes=1),  # Расписание выполнения задачи (например, каждые 10 минут)
+    },
 }
 
 MIDDLEWARE = [
@@ -98,9 +107,6 @@ CELERY_BROKER_URL = 'redis://localhost:6379' # Например, Redis, кото
 
 # URL-адрес брокера результатов, также Redis
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-
-# Часовой пояс для работы Celery
-CELERY_TIMEZONE = "Armenia/Erevan"
 
 # Флаг отслеживания выполнения задач
 CELERY_TASK_TRACK_STARTED = True
@@ -189,6 +195,8 @@ AUTH_USER_MODEL = 'users.User'
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
+
+CELERY_TIMEZONE = TIME_ZONE
 
 USE_I18N = True
 
