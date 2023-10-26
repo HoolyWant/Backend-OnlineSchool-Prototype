@@ -7,7 +7,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from school.models import Course, Lesson, Payment, Following
-from school.permissions import IsStaff, IsOwnerOrStuff, ViewSetPermission, NotIsStaff, IsOwner
+from school.permissions import IsOwnerOrStuff, ViewSetPermission, NotIsStaff, IsOwner
 from school.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, FollowingSerializer
 from school.services import create_product, create_price, create_session
 from school.tasks import send_update
@@ -38,7 +38,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 class LessonAPIList(generics.ListCreateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated, NotIsStaff]
+    permission_classes = [IsAuthenticated | NotIsStaff]
 
 
 class LessonAPIView(generics.RetrieveAPIView):
@@ -78,7 +78,7 @@ class LessonAPIEdit(generics.UpdateAPIView):
 class LessonAPIDelete(generics.DestroyAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsOwner, IsAdminUser]
+    permission_classes = [IsOwner | IsAdminUser]
 
 
 class PaymentCreateAPI(generics.CreateAPIView):
