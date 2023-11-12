@@ -1,14 +1,17 @@
 from rest_framework import serializers
 
-from school.models import Course, Lesson, Payment
-from school.permissions import IsOwner
+from school.models import Course, Lesson, Payment, Following
+from school.validators import EvenNumberValidator
 
 
 class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ['title', 'description', 'image', 'link']
+        fields = ['id', 'title', 'description', 'image', 'link', 'course', 'user']
+        validators = [
+            EvenNumberValidator(field='link')
+        ]
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -20,12 +23,16 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'title', 'description', 'lesson_count', 'lesson']
+        fields = ['id', 'title', 'description', 'lesson_count', 'lesson', 'user', ]
 
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = ['user', 'payment_date', 'course', 'lesson', 'amount', 'payment_method']
-        permission_classes = [IsOwner]
+        fields = ['user', 'payment_date', 'course', 'lesson', 'amount', 'payment_method', 'link']
 
+
+class FollowingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Following
+        fields = ['course',]

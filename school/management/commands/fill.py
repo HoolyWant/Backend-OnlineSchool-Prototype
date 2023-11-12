@@ -40,7 +40,7 @@ class Command(BaseCommand):
             else:
                 course = Course.objects.get(pk=lesson['course'])
             Lesson.objects.create(title=lesson['title'],
-                                  description=course,
+                                  description=lesson['description'],
                                   course=course,
                                   )
 

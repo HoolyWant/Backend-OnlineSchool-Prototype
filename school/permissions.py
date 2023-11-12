@@ -14,7 +14,7 @@ class ViewSetPermission(BasePermission):
             elif view.action == 'delete':
                 return request.user == view.get_object().user
             elif view.action in ['retrieve', 'update', 'partial_update', ] and request.user == view.get_object(
-                                ).user or request.user == request.user.is_staff:
+            ).user or request.user == request.user.is_staff:
                 return True
             else:
                 return False
@@ -22,9 +22,22 @@ class ViewSetPermission(BasePermission):
             return False
 
 
+class IsOwnerOrStuff(BasePermission):
+    def has_permission(self, request, view):
+        if request.user == view.get_object(
+        ).user or request.user == request.user.is_staff:
+            return True
+        else:
+            return False
+
+
 class IsOwner(BasePermission):
     def has_permission(self, request, view):
-        return request.user == view.get_object().user
+        if request.user == view.get_object(
+        ).user:
+            return True
+        else:
+            return False
 
 
 class IsStaff(BasePermission):
@@ -35,11 +48,9 @@ class IsStaff(BasePermission):
 class NotIsStaff(BasePermission):
     def has_permission(self, request, view):
         if request.user.is_authenticated:
-            if request.user.is_staff is False:
-                return True
-            else:
+            if request.user.is_staff:
                 return False
+            else:
+                return True
         else:
             return False
-
-

@@ -10,6 +10,7 @@ class Course(models.Model):
     image = models.ImageField(verbose_name='превью', **NULLABLE)
     description = models.TextField(verbose_name='описание')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
+    cost = models.IntegerField(default=0, verbose_name='цена')
 
     class Meta:
         verbose_name = 'курс'
@@ -31,6 +32,7 @@ class Lesson(models.Model):
     link = models.CharField(max_length=200, verbose_name='ссылка')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс', **NULLABLE, related_name='lesson')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
+    cost = models.IntegerField(default=0, verbose_name='цена')
 
     class Meta:
         verbose_name = 'урок'
@@ -55,8 +57,9 @@ class Payment(models.Model):
     payment_date = models.DateTimeField(auto_now_add=True, verbose_name='дата оплаты')
     course = models.ForeignKey(Course,  on_delete=models.CASCADE, verbose_name='курс', **NULLABLE)
     lesson = models.ForeignKey(Lesson,  on_delete=models.CASCADE, verbose_name='урок', **NULLABLE)
-    amount = models.PositiveIntegerField(verbose_name='сумма оплаты')
+    amount = models.PositiveIntegerField(default=0, verbose_name='сумма оплаты', **NULLABLE)
     payment_method = models.CharField(max_length=10, choices=PAYMENT_METHODS, verbose_name='способ оплаты')
+    link = models.CharField(max_length=500, verbose_name='ссылка', **NULLABLE)
 
     class Meta:
         verbose_name = 'оплата'
@@ -72,4 +75,14 @@ class Payment(models.Model):
                            f'TRUNCATE TABLE {cls._meta.db_table} RESTART IDENTITY')
 
 
+class Following(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
+    following_status = models.BooleanField(default=True, verbose_name='статус подписки')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс', **NULLABLE)
 
+    class Meta:
+        verbose_name = 'подписка'
+        verbose_name_plural = 'подписки'
+
+    def __str__(self):
+        return f'{self.user}, {self.course}, {self.following_status}'
