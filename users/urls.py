@@ -11,3 +11,4 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('user/<int:pk>', UserRetrieveApi.as_view(), name='пользователь'),
 ]
+

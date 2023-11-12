@@ -5,13 +5,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-
 from school.models import Course, Lesson, Payment, Following
 from school.permissions import IsOwnerOrStuff, ViewSetPermission, NotIsStaff, IsOwner
 from school.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, FollowingSerializer
 from school.services import create_product, create_price, create_session
 from school.tasks import send_update
 from users.models import User
+
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -38,7 +38,9 @@ class CourseViewSet(viewsets.ModelViewSet):
 class LessonAPIList(generics.ListCreateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
+
     permission_classes = [IsAuthenticated | NotIsStaff]
+
 
 
 class LessonAPIView(generics.RetrieveAPIView):
@@ -47,9 +49,12 @@ class LessonAPIView(generics.RetrieveAPIView):
     permission_classes = [IsOwnerOrStuff]
 
 
+
 class LessonAPICreate(generics.CreateAPIView):
     serializer_class = LessonSerializer
+
     permission_classes = [NotIsStaff | IsAdminUser | IsAuthenticated]
+
 
     def perform_create(self, serializer):
         new_lesson = serializer.save()
@@ -73,6 +78,7 @@ class LessonAPIEdit(generics.UpdateAPIView):
                     pk=follower.user_id).__dict__['email'])
             send_update.delay(followers_list, lesson_title)
         update_lesson.save()
+
 
 
 class LessonAPIDelete(generics.DestroyAPIView):

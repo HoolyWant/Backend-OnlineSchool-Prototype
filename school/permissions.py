@@ -7,9 +7,10 @@ class ViewSetPermission(BasePermission):
             if view.action == 'list':
                 return True
             elif view.action == 'create':
-                if request.user == request.user.is_staff and request.user != request.user.is_superuser:
+                if request.user.is_staff:
                     return False
-                return True
+                else:
+                    return True
             elif view.action == 'delete':
                 return request.user == view.get_object().user
             elif view.action in ['retrieve', 'update', 'partial_update', ] and request.user == view.get_object(
