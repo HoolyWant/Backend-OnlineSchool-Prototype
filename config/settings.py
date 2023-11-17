@@ -34,7 +34,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0']
 
 
 # Application definition
@@ -151,9 +151,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'DjangoRest',
-        'HOST': 'localhost',
-        'USER': 'postgres',
+        'NAME': os.getenv('POSTGRES_NAME'),
+        'HOST': 'postgres-db',
+        'USER': os.getenv('DATABASE_USER'),
         'PASSWORD': os.getenv('PASSWORD_DB'),
     }
 }
